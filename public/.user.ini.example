@@ -1,0 +1,5 @@
+; Ajuste local / KingHost para uploads de até 20 MB no módulo Arquivos.
+; Em hospedagem compartilhada, use o painel ou este arquivo na pasta pública se permitido.
+upload_max_filesize = 20M
+post_max_size = 22M
+max_execution_time = 120

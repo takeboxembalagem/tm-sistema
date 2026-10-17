@@ -1,0 +1,53 @@
+USE papel_magenta;
+
+-- Configuração global da Tabela de Preços (visualização sobre produtos existentes)
+CREATE TABLE IF NOT EXISTS tabela_preco_config (
+  id TINYINT UNSIGNED NOT NULL PRIMARY KEY DEFAULT 1,
+  imposto_percentual DECIMAL(8,4) NOT NULL DEFAULT 9.5000,
+  incluir_comissao TINYINT(1) NOT NULL DEFAULT 0,
+  comissao_percentual DECIMAL(8,4) NOT NULL DEFAULT 10.0000,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO tabela_preco_config (id, imposto_percentual, incluir_comissao, comissao_percentual)
+VALUES (1, 9.5000, 0, 10.0000)
+ON DUPLICATE KEY UPDATE id = id;
+
+CREATE TABLE IF NOT EXISTS tabela_preco_margens_cfg (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  margem_percentual DECIMAL(8,4) NOT NULL,
+  ordem INT UNSIGNED NOT NULL DEFAULT 0,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uq_margem_cfg (margem_percentual)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS tabela_preco_qtd_cfg (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  quantidade INT UNSIGNED NOT NULL,
+  ordem INT UNSIGNED NOT NULL DEFAULT 0,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uq_qtd_cfg (quantidade)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO tabela_preco_margens_cfg (margem_percentual, ordem)
+SELECT v.m, v.o FROM (
+  SELECT 10.0000 AS m, 0 AS o UNION ALL
+  SELECT 20.0000, 1 UNION ALL
+  SELECT 30.0000, 2 UNION ALL
+  SELECT 40.0000, 3 UNION ALL
+  SELECT 50.0000, 4 UNION ALL
+  SELECT 60.0000, 5
+) v
+WHERE NOT EXISTS (SELECT 1 FROM tabela_preco_margens_cfg LIMIT 1);
+
+INSERT INTO tabela_preco_qtd_cfg (quantidade, ordem)
+SELECT v.q, v.o FROM (
+  SELECT 10 AS q, 0 AS o UNION ALL
+  SELECT 50, 1 UNION ALL
+  SELECT 100, 2 UNION ALL
+  SELECT 500, 3 UNION ALL
+  SELECT 1000, 4
+) v
+WHERE NOT EXISTS (SELECT 1 FROM tabela_preco_qtd_cfg LIMIT 1);

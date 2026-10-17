@@ -1,0 +1,225 @@
+/**
+ * Folha SL61083 — Carta (215,9 × 279,4 mm)
+ * 10 etiquetas: 2 colunas × 5 linhas
+ * Cada etiqueta: 101,6 × 50,8 mm
+ *
+ * Ordem coluna-primeiro (posicionamento lógico 1–10):
+ *   1 | 6
+ *   2 | 7
+ *   3 | 8
+ *   4 | 9
+ *   5 | 10
+ *
+ * A grade CSS preenche esquerda→direita, cima→baixo na ordem visual
+ * [1,6,2,7,3,8,4,9,5,10] para coincidir com essa numeração.
+ */
+
+@page {
+    size: letter;
+    margin: 0;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html, body.etq-body {
+    margin: 0;
+    padding: 0;
+    background: #e8e8e8;
+    font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+    color: #111;
+}
+
+.etq-toolbar {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 12px 16px;
+    background: #fff;
+    border-bottom: 1px solid #ddd;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.etq-toolbar a,
+.etq-toolbar button {
+    font: inherit;
+    cursor: pointer;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #f7f7f7;
+    text-decoration: none;
+    color: #222;
+}
+
+.etq-toolbar-note {
+    color: #666;
+    font-size: 0.85rem;
+}
+
+.etq-print-hint {
+    max-width: 215.9mm;
+    margin: 10px auto 0;
+    padding: 10px 14px;
+    background: #fff8e6;
+    border: 1px solid #e0c36a;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    color: #5a4500;
+}
+
+.etq-print-hint strong {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.etq-error {
+    max-width: 480px;
+    margin: 24px auto;
+    padding: 16px;
+    background: #fff;
+    border: 1px solid #e0a0a0;
+    border-radius: 8px;
+    color: #8a1f1f;
+}
+
+/* Folha Carta completa — NÃO uma etiqueta por página */
+.etq-sheet {
+    width: 215.9mm;
+    height: 279.4mm;
+    margin: 12px auto;
+    background: #fff;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+    /* Margens derivadas para caber 2×101,6 e 5×50,8 na Carta */
+    padding: 12.7mm 6.35mm;
+    display: grid;
+    grid-template-columns: 101.6mm 101.6mm;
+    grid-template-rows: repeat(5, 50.8mm);
+    column-gap: 0;
+    row-gap: 0;
+    justify-content: space-between;
+    page-break-after: always;
+    break-after: page;
+}
+
+.etq-sheet:last-child {
+    page-break-after: auto;
+    break-after: auto;
+}
+
+.etq-label {
+    width: 101.6mm;
+    height: 50.8mm;
+    overflow: hidden;
+    padding: 3.5mm 4mm;
+    position: relative;
+}
+
+.etq-label.is-empty {
+    /* Espaço reservado na folha parcial — sem conteúdo */
+}
+
+.etq-label-inner {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    text-align: center;
+}
+
+.etq-nome {
+    font-size: 11pt;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 1.2mm;
+    /* Nome completo: quebra em linhas, sem corte por max-height */
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    hyphens: auto;
+    flex: 0 0 auto;
+}
+
+.etq-codigo {
+    font-size: 9pt;
+    font-weight: 600;
+    line-height: 1.2;
+    margin-bottom: 2mm;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    max-width: 100%;
+    flex: 0 0 auto;
+}
+
+.etq-sec {
+    font-size: 9pt;
+    font-weight: 600;
+    line-height: 1.2;
+    color: #111;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-wrap: break-word;
+}
+
+.etq-rodape {
+    font-size: 6pt;
+    line-height: 1.25;
+    color: #555;
+    margin-top: auto;
+    padding-top: 1.2mm;
+    flex: 0 0 auto;
+    overflow-wrap: break-word;
+}
+
+.etq-logo {
+    display: block;
+    height: 7.5mm;
+    width: auto;
+    max-width: 42mm;
+    object-fit: contain;
+    object-position: center;
+    margin: 0 auto 0.8mm;
+}
+
+.etq-marca {
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+@media print {
+    html, body.etq-body {
+        background: #fff;
+    }
+
+    .no-print {
+        display: none !important;
+    }
+
+    .etq-sheet {
+        margin: 0;
+        box-shadow: none;
+        page-break-after: always;
+        break-after: page;
+    }
+
+    .etq-sheet:last-child {
+        page-break-after: auto;
+        break-after: auto;
+    }
+
+    /* Em modo impressão direta, sem toolbar */
+    body.etq-print-mode {
+        margin: 0;
+        padding: 0;
+    }
+}
+
+@media screen {
+    body.etq-preview-mode .etq-sheet {
+        outline: 1px dashed #ccc;
+    }
+}

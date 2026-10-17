@@ -1,0 +1,6 @@
+# Arquivos técnicos dos produtos (fora do document root).
+# Acesso somente via rotas autenticadas /arquivos/{id}/download
+*
+!.gitignore
+!.gitkeep
+!index.php
